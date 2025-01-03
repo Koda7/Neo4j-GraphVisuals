@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeoVis Sandbox Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/neovis.js@1.6.0/dist/neovis.js"></script>
+</head>
+<body>
+  <h2>Sandbox Graph Visualization</h2>
+  <div id="viz" style="width: 100%; height: 600px; border: 1px solid #ccc;"></div>
+
+  <script type="text/javascript">
+    function draw() {
+      const config = {
+        containerId: "viz",
+        neo4j: {
+          serverUrl: "bolt://3.84.233.234:7687",
+          serverUser: "neo4j",
+          serverPassword: "generation-costs-digits",
+        },
+        labels: {
+          Person: {
+            label: "name",
+            value: "pagerank",
+            group: "community",
+          },
+          Movie: {
+            label: "title",
+            value: "pagerank",
+          }
+        },
+        relationships: {
+          ACTED_IN: {
+            value: "weight",
+          },
+          DIRECTED: {
+            value: "weight",
+          }
+        },
+        initialCypher: "MATCH (p:Person)-[r:ACTED_IN]->(m:Movie) RETURN p, r, m LIMIT 25",
+        console_debug: true,
+      };
+
+      const viz = new NeoVis.default(config);
+      viz.render();
+    }
+
+    draw();
+  </script>
+</body>
+</html>
