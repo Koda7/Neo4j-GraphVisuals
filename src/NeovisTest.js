@@ -670,259 +670,259 @@
 
 // export default D3Graph;
 
-// import React, { useEffect, useRef, useState } from 'react';
-// import * as d3 from 'd3';
-// import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-// const sampleData = {
-//   nodes: [
-//     { id: "1", label: "Customer", name: "Alice" },
-//     { id: "2", label: "Order", order_id: "1234" },
-//     { id: "3", label: "Product", product_name: "Widget" },
-//     { id: "4", label: "Customer", name: "Bob" },
-//     { id: "5", label: "Order", order_id: "5678" },
-//     { id: "6", label: "Product", product_name: "Gadget" },
-//     { id: "7", label: "Customer", name: "Carol" },
-//     { id: "8", label: "Order", order_id: "9101" },
-//     { id: "9", label: "Product", product_name: "Tool" },
-//     { id: "10", label: "Customer", name: "Dave" },
-//     { id: "11", label: "Order", order_id: "1121" },
-//     { id: "12", label: "Product", product_name: "Device" }
-//   ],
-//   links: [
-//     { source: "1", target: "2", type: "PLACED" },
-//     { source: "2", target: "3", type: "CONTAINS" },
-//     { source: "4", target: "5", type: "PLACED" },
-//     { source: "5", target: "6", type: "CONTAINS" },
-//     { source: "7", target: "8", type: "PLACED" },
-//     { source: "8", target: "9", type: "CONTAINS" },
-//     { source: "10", target: "11", type: "PLACED" },
-//     { source: "11", target: "12", type: "CONTAINS" }
-//   ]
-// };
+const sampleData = {
+  nodes: [
+    { id: "1", label: "Customer", name: "Alice" },
+    { id: "2", label: "Order", order_id: "1234" },
+    { id: "3", label: "Product", product_name: "Widget" },
+    { id: "4", label: "Customer", name: "Bob" },
+    { id: "5", label: "Order", order_id: "5678" },
+    { id: "6", label: "Product", product_name: "Gadget" },
+    { id: "7", label: "Customer", name: "Carol" },
+    { id: "8", label: "Order", order_id: "9101" },
+    { id: "9", label: "Product", product_name: "Tool" },
+    { id: "10", label: "Customer", name: "Dave" },
+    { id: "11", label: "Order", order_id: "1121" },
+    { id: "12", label: "Product", product_name: "Device" }
+  ],
+  links: [
+    { source: "1", target: "2", type: "PLACED" },
+    { source: "2", target: "3", type: "CONTAINS" },
+    { source: "4", target: "5", type: "PLACED" },
+    { source: "5", target: "6", type: "CONTAINS" },
+    { source: "7", target: "8", type: "PLACED" },
+    { source: "8", target: "9", type: "CONTAINS" },
+    { source: "10", target: "11", type: "PLACED" },
+    { source: "11", target: "12", type: "CONTAINS" }
+  ]
+};
 
-// const D3Graph = () => {
-//   const svgRef = useRef();
-//   const [selectedNode, setSelectedNode] = useState(null);
-//   const [showOnlyCustomers, setShowOnlyCustomers] = useState(false);
+const D3Graph = () => {
+  const svgRef = useRef();
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [showOnlyCustomers, setShowOnlyCustomers] = useState(false);
 
-//   const updateDimensions = () => {
-//     const width = window.innerWidth;
-//     const height = window.innerHeight;
-//     d3.select(svgRef.current).attr("width", width).attr("height", height);
-//   };
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    d3.select(svgRef.current).attr("width", width).attr("height", height);
+  };
 
-//   useEffect(() => {
-//     updateDimensions();
-//     window.addEventListener("resize", updateDimensions);
+  useEffect(() => {
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
 
-//     const width = window.innerWidth;
-//     const height = window.innerHeight;
-//     const padding = 50;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const padding = 50;
 
-//     const svg = d3.select(svgRef.current);
-//     svg.selectAll("*").remove();
-//     const g = svg.append("g");
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
+    const g = svg.append("g");
 
-//     const zoom = d3.zoom()
-//       .scaleExtent([0.1, 4])
-//       .on("zoom", (event) => {
-//         g.attr("transform", event.transform);
-//       });
-//     svg.call(zoom);
+    const zoom = d3.zoom()
+      .scaleExtent([0.1, 4])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+    svg.call(zoom);
 
-//     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-//     const filteredNodes = showOnlyCustomers
-//       ? sampleData.nodes.filter(node => node.label === "Customer")
-//       : sampleData.nodes;
+    const filteredNodes = showOnlyCustomers
+      ? sampleData.nodes.filter(node => node.label === "Customer")
+      : sampleData.nodes;
 
-//     const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
-//     const filteredLinks = showOnlyCustomers
-//       ? sampleData.links.filter(link =>
-//           filteredNodeIds.has(link.source) && filteredNodeIds.has(link.target)
-//         )
-//       : sampleData.links;
+    const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
+    const filteredLinks = showOnlyCustomers
+      ? sampleData.links.filter(link =>
+          filteredNodeIds.has(link.source) && filteredNodeIds.has(link.target)
+        )
+      : sampleData.links;
 
-//     const simulation = d3.forceSimulation(filteredNodes)
-//       .force("link", d3.forceLink(filteredLinks)
-//         .id(d => d.id)
-//         .distance(150))
-//       .force("charge", d3.forceManyBody().strength(-200))
-//       .force("center", d3.forceCenter(width / 2, height / 2))
-//       .force("collision", d3.forceCollide().radius(40));
+    const simulation = d3.forceSimulation(filteredNodes)
+      .force("link", d3.forceLink(filteredLinks)
+        .id(d => d.id)
+        .distance(150))
+      .force("charge", d3.forceManyBody().strength(-200))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(40));
 
-//     const link = g.selectAll(".link")
-//       .data(filteredLinks)
-//       .enter()
-//       .append("line")
-//       .attr("class", "link")
-//       .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
-//       .attr("stroke-width", 2);
+    const link = g.selectAll(".link")
+      .data(filteredLinks)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
+      .attr("stroke-width", 2);
 
-//     const node = g.selectAll(".node")
-//       .data(filteredNodes)
-//       .enter()
-//       .append("circle")
-//       .attr("class", "node")
-//       .attr("r", 30)
-//       .attr("fill", d => colorScale(d.label))
-//       .style("cursor", "grab")
-//       .on("click", (event, d) => {
-//         event.stopPropagation();
-//         setSelectedNode(d);
-//       });
+    const node = g.selectAll(".node")
+      .data(filteredNodes)
+      .enter()
+      .append("circle")
+      .attr("class", "node")
+      .attr("r", 30)
+      .attr("fill", d => colorScale(d.label))
+      .style("cursor", "grab")
+      .on("click", (event, d) => {
+        event.stopPropagation();
+        setSelectedNode(d);
+      });
 
-//     const labels = g.selectAll(".label")
-//       .data(filteredNodes)
-//       .enter()
-//       .append("text")
-//       .attr("class", "label")
-//       .attr("dy", ".35em")
-//       .attr("text-anchor", "middle")
-//       .attr("fill", "white")
-//       .attr("font-size", 14)
-//       .attr("pointer-events", "none")
-//       .text(d => d.label === "Customer" ? d.name : d.label === "Order" ? d.order_id : d.product_name);
+    const labels = g.selectAll(".label")
+      .data(filteredNodes)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .attr("fill", "white")
+      .attr("font-size", 14)
+      .attr("pointer-events", "none")
+      .text(d => d.label === "Customer" ? d.name : d.label === "Order" ? d.order_id : d.product_name);
 
-//     const drag = d3.drag()
-//       .on("start", (event, d) => {
-//         if (!event.active) simulation.alphaTarget(0.3).restart();
-//         d.fx = d.x;
-//         d.fy = d.y;
-//       })
-//       .on("drag", (event, d) => {
-//         d.fx = Math.max(padding, Math.min(width - padding, event.x));
-//         d.fy = Math.max(padding, Math.min(height - padding, event.y));
-//       })
-//       .on("end", (event, d) => {
-//         if (!event.active) simulation.alphaTarget(0);
-//         d.fx = null;
-//         d.fy = null;
-//       });
+    const drag = d3.drag()
+      .on("start", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", (event, d) => {
+        d.fx = Math.max(padding, Math.min(width - padding, event.x));
+        d.fy = Math.max(padding, Math.min(height - padding, event.y));
+      })
+      .on("end", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
 
-//     node.call(drag);
+    node.call(drag);
 
-//     svg.on("click", () => {
-//       setSelectedNode(null);
-//     });
+    svg.on("click", () => {
+      setSelectedNode(null);
+    });
 
-//     simulation.on("tick", () => {
-//       link
-//         .attr("x1", d => d.source.x)
-//         .attr("y1", d => d.source.y)
-//         .attr("x2", d => d.target.x)
-//         .attr("y2", d => d.target.y);
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
 
-//       node
-//         .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
-//         .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
+      node
+        .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
+        .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
 
-//       labels
-//         .attr("x", d => d.x)
-//         .attr("y", d => d.y);
-//     });
+      labels
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    });
 
-//     // Zoom control functions
-//     window.zoomIn = () => {
-//       svg.transition().call(zoom.scaleBy, 1.5);
-//     };
+    // Zoom control functions
+    window.zoomIn = () => {
+      svg.transition().call(zoom.scaleBy, 1.5);
+    };
 
-//     window.zoomOut = () => {
-//       svg.transition().call(zoom.scaleBy, 0.67);
-//     };
+    window.zoomOut = () => {
+      svg.transition().call(zoom.scaleBy, 0.67);
+    };
 
-//     window.fitToScreen = () => {
-//       const bounds = g.node().getBBox();
-//       const parent = svg.node().getBoundingClientRect();
-//       const fullWidth = parent.width;
-//       const fullHeight = parent.height;
+    window.fitToScreen = () => {
+      const bounds = g.node().getBBox();
+      const parent = svg.node().getBoundingClientRect();
+      const fullWidth = parent.width;
+      const fullHeight = parent.height;
       
-//       const width = bounds.width;
-//       const height = bounds.height;
+      const width = bounds.width;
+      const height = bounds.height;
       
-//       const midX = bounds.x + width / 2;
-//       const midY = bounds.y + height / 2;
+      const midX = bounds.x + width / 2;
+      const midY = bounds.y + height / 2;
       
-//       const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
-//       const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+      const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+      const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
-//       svg.transition()
-//         .duration(750)
-//         .call(zoom.transform, d3.zoomIdentity
-//           .translate(translate[0], translate[1])
-//           .scale(scale));
-//     };
+      svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity
+          .translate(translate[0], translate[1])
+          .scale(scale));
+    };
 
-//     return () => {
-//       window.removeEventListener("resize", updateDimensions);
-//       simulation.stop();
-//       svg.selectAll("*").remove();
-//     };
-//   }, [showOnlyCustomers]);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      simulation.stop();
+      svg.selectAll("*").remove();
+    };
+  }, [showOnlyCustomers]);
 
-//   return (
-//     <div className="relative w-full h-screen overflow-hidden touch-none">
-//       <div className="absolute top-4 left-4 z-10">
-//         <label className="flex items-center space-x-2">
-//           <input
-//             type="checkbox"
-//             checked={showOnlyCustomers}
-//             onChange={() => setShowOnlyCustomers(!showOnlyCustomers)}
-//           />
-//           <span>Show Only Customers</span>
-//         </label>
-//       </div>
+  return (
+    <div className="relative w-full h-screen overflow-hidden touch-none">
+      <div className="absolute top-4 left-4 z-10">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={showOnlyCustomers}
+            onChange={() => setShowOnlyCustomers(!showOnlyCustomers)}
+          />
+          <span>Show Only Customers</span>
+        </label>
+      </div>
 
-//       <svg ref={svgRef} className="w-full h-full"></svg>
+      <svg ref={svgRef} className="w-full h-full"></svg>
       
-//       <div className="absolute top-4 right-4 flex flex-col gap-2">
-//         <button 
-//           onClick={() => window.zoomIn()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Zoom In"
-//         >
-//           <ZoomIn className="w-6 h-6" />
-//         </button>
-//         <button 
-//           onClick={() => window.zoomOut()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Zoom Out"
-//         >
-//           <ZoomOut className="w-6 h-6" />
-//         </button>
-//         <button 
-//           onClick={() => window.fitToScreen()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Fit to Screen"
-//         >
-//           <Maximize className="w-6 h-6" />
-//         </button>
-//       </div>
+      <div className="absolute top-4 right-4 flex flex-col gap-2">
+        <button 
+          onClick={() => window.zoomIn()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Zoom In"
+        >
+          <ZoomIn className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => window.zoomOut()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Zoom Out"
+        >
+          <ZoomOut className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => window.fitToScreen()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Fit to Screen"
+        >
+          <Maximize className="w-6 h-6" />
+        </button>
+      </div>
 
-//       {selectedNode && (
-//         <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
-//           <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
-//           <div className="space-y-2">
-//             {Object.entries(selectedNode).map(([key, value]) => {
-//               if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
-//                 return (
-//                   <div key={key} className="flex justify-between">
-//                     <span className="text-gray-600">{key}:</span>
-//                     <span className="font-medium">{value}</span>
-//                   </div>
-//                 );
-//               }
-//               return null;
-//             })}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+      {selectedNode && (
+        <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
+          <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
+          <div className="space-y-2">
+            {Object.entries(selectedNode).map(([key, value]) => {
+              if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
+                return (
+                  <div key={key} className="flex justify-between">
+                    <span className="text-gray-600">{key}:</span>
+                    <span className="font-medium">{value}</span>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-// export default D3Graph;
+export default D3Graph;
 
 // import React, { useEffect, useRef, useState } from 'react';
 // import * as d3 from 'd3';
@@ -1100,239 +1100,239 @@
 
 // export default D3Graph;
 
-import React, { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
-import { fetchGraphData } from './neo4jService'; // This should be set up to fetch data from Neo4j
-import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+// import React, { useEffect, useRef, useState } from 'react';
+// import * as d3 from 'd3';
+// import { fetchGraphData } from './neo4jService'; // This should be set up to fetch data from Neo4j
+// import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-const D3Graph = () => {
-  const svgRef = useRef();
-  const [data, setData] = useState({ nodes: [], links: [] });
-  const [selectedNode, setSelectedNode] = useState(null);
+// const D3Graph = () => {
+//   const svgRef = useRef();
+//   const [data, setData] = useState({ nodes: [], links: [] });
+//   const [selectedNode, setSelectedNode] = useState(null);
 
-  const updateDimensions = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    d3.select(svgRef.current).attr("width", width).attr("height", height);
-  };
+//   const updateDimensions = () => {
+//     const width = window.innerWidth;
+//     const height = window.innerHeight;
+//     d3.select(svgRef.current).attr("width", width).attr("height", height);
+//   };
 
-  useEffect(() => {
-    const getData = async () => {
-      const graphData = await fetchGraphData();
-      setData(graphData);
-    };
+//   useEffect(() => {
+//     const getData = async () => {
+//       const graphData = await fetchGraphData();
+//       setData(graphData);
+//     };
 
-    getData();
-  }, []);
+//     getData();
+//   }, []);
 
-  useEffect(() => {
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+//   useEffect(() => {
+//     updateDimensions();
+//     window.addEventListener("resize", updateDimensions);
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const padding = 50;
+//     const width = window.innerWidth;
+//     const height = window.innerHeight;
+//     const padding = 50;
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
-    const g = svg.append("g");
+//     const svg = d3.select(svgRef.current);
+//     svg.selectAll("*").remove();
+//     const g = svg.append("g");
 
-    const zoom = d3.zoom()
-      .scaleExtent([0.1, 4])
-      .on("zoom", (event) => {
-        g.attr("transform", event.transform);
-      });
-    svg.call(zoom);
+//     const zoom = d3.zoom()
+//       .scaleExtent([0.1, 4])
+//       .on("zoom", (event) => {
+//         g.attr("transform", event.transform);
+//       });
+//     svg.call(zoom);
 
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+//     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const simulation = d3.forceSimulation(data.nodes)
-      .force("link", d3.forceLink(data.links)
-        .id(d => d.id)
-        .distance(150))
-      .force("charge", d3.forceManyBody().strength(-200))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(40));
+//     const simulation = d3.forceSimulation(data.nodes)
+//       .force("link", d3.forceLink(data.links)
+//         .id(d => d.id)
+//         .distance(150))
+//       .force("charge", d3.forceManyBody().strength(-200))
+//       .force("center", d3.forceCenter(width / 2, height / 2))
+//       .force("collision", d3.forceCollide().radius(40));
 
-    const link = g.selectAll(".link")
-      .data(data.links)
-      .enter()
-      .append("line")
-      .attr("class", "link")
-      .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
-      .attr("stroke-width", 2);
+//     const link = g.selectAll(".link")
+//       .data(data.links)
+//       .enter()
+//       .append("line")
+//       .attr("class", "link")
+//       .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
+//       .attr("stroke-width", 2);
 
-    // Add link labels for relationship types
-    const linkLabels = g.selectAll(".link-label")
-      .data(data.links)
-      .enter()
-      .append("text")
-      .attr("class", "link-label")
-      .attr("text-anchor", "middle")
-      .attr("font-size", 12)
-      .attr("fill", "#555")
-      .text(d => d.type);
+//     // Add link labels for relationship types
+//     const linkLabels = g.selectAll(".link-label")
+//       .data(data.links)
+//       .enter()
+//       .append("text")
+//       .attr("class", "link-label")
+//       .attr("text-anchor", "middle")
+//       .attr("font-size", 12)
+//       .attr("fill", "#555")
+//       .text(d => d.type);
 
-    const node = g.selectAll(".node")
-      .data(data.nodes)
-      .enter()
-      .append("circle")
-      .attr("class", "node")
-      .attr("r", 30)
-      .attr("fill", d => colorScale(d.label))
-      .style("cursor", "grab")
-      .on("click", (event, d) => {
-        event.stopPropagation();
-        setSelectedNode(d);
-      });
+//     const node = g.selectAll(".node")
+//       .data(data.nodes)
+//       .enter()
+//       .append("circle")
+//       .attr("class", "node")
+//       .attr("r", 30)
+//       .attr("fill", d => colorScale(d.label))
+//       .style("cursor", "grab")
+//       .on("click", (event, d) => {
+//         event.stopPropagation();
+//         setSelectedNode(d);
+//       });
 
-    // Updated label logic for displaying node names
-    const labels = g.selectAll(".label")
-      .data(data.nodes)
-      .enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "middle")
-      .attr("fill", "white")
-      .attr("font-size", 14)
-      .attr("pointer-events", "none")
-      .text(d => {
-        if (d.label === "Customer" && d.customer_name) return d.customer_name;
-        if (d.label === "Order" && d.order_id) return d.order_id;
-        if (d.label === "Product" && d.product_name) return d.product_name;
-        return d.label; // Fallback to label name if specific property is missing
-      });
+//     // Updated label logic for displaying node names
+//     const labels = g.selectAll(".label")
+//       .data(data.nodes)
+//       .enter()
+//       .append("text")
+//       .attr("class", "label")
+//       .attr("dy", ".35em")
+//       .attr("text-anchor", "middle")
+//       .attr("fill", "white")
+//       .attr("font-size", 14)
+//       .attr("pointer-events", "none")
+//       .text(d => {
+//         if (d.label === "Customer" && d.customer_name) return d.customer_name;
+//         if (d.label === "Order" && d.order_id) return d.order_id;
+//         if (d.label === "Product" && d.product_name) return d.product_name;
+//         return d.label; // Fallback to label name if specific property is missing
+//       });
 
-    const drag = d3.drag()
-      .on("start", (event, d) => {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      })
-      .on("drag", (event, d) => {
-        d.fx = Math.max(padding, Math.min(width - padding, event.x));
-        d.fy = Math.max(padding, Math.min(height - padding, event.y));
-      })
-      .on("end", (event, d) => {
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-      });
+//     const drag = d3.drag()
+//       .on("start", (event, d) => {
+//         if (!event.active) simulation.alphaTarget(0.3).restart();
+//         d.fx = d.x;
+//         d.fy = d.y;
+//       })
+//       .on("drag", (event, d) => {
+//         d.fx = Math.max(padding, Math.min(width - padding, event.x));
+//         d.fy = Math.max(padding, Math.min(height - padding, event.y));
+//       })
+//       .on("end", (event, d) => {
+//         if (!event.active) simulation.alphaTarget(0);
+//         d.fx = null;
+//         d.fy = null;
+//       });
 
-    node.call(drag);
+//     node.call(drag);
 
-    simulation.on("tick", () => {
-      link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+//     simulation.on("tick", () => {
+//       link
+//         .attr("x1", d => d.source.x)
+//         .attr("y1", d => d.source.y)
+//         .attr("x2", d => d.target.x)
+//         .attr("y2", d => d.target.y);
 
-      linkLabels
-        .attr("x", d => (d.source.x + d.target.x) / 2)
-        .attr("y", d => (d.source.y + d.target.y) / 2);
+//       linkLabels
+//         .attr("x", d => (d.source.x + d.target.x) / 2)
+//         .attr("y", d => (d.source.y + d.target.y) / 2);
 
-      node
-        .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
-        .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
+//       node
+//         .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
+//         .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
 
-      labels
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
-    });
+//       labels
+//         .attr("x", d => d.x)
+//         .attr("y", d => d.y);
+//     });
 
-    // Zoom control functions
-    window.zoomIn = () => {
-      svg.transition().call(zoom.scaleBy, 1.5);
-    };
+//     // Zoom control functions
+//     window.zoomIn = () => {
+//       svg.transition().call(zoom.scaleBy, 1.5);
+//     };
 
-    window.zoomOut = () => {
-      svg.transition().call(zoom.scaleBy, 0.67);
-    };
+//     window.zoomOut = () => {
+//       svg.transition().call(zoom.scaleBy, 0.67);
+//     };
 
-    window.fitToScreen = () => {
-      const bounds = g.node().getBBox();
-      const parent = svg.node().getBoundingClientRect();
-      const fullWidth = parent.width;
-      const fullHeight = parent.height;
+//     window.fitToScreen = () => {
+//       const bounds = g.node().getBBox();
+//       const parent = svg.node().getBoundingClientRect();
+//       const fullWidth = parent.width;
+//       const fullHeight = parent.height;
       
-      const width = bounds.width;
-      const height = bounds.height;
+//       const width = bounds.width;
+//       const height = bounds.height;
       
-      const midX = bounds.x + width / 2;
-      const midY = bounds.y + height / 2;
+//       const midX = bounds.x + width / 2;
+//       const midY = bounds.y + height / 2;
       
-      const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
-      const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+//       const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+//       const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
-      svg.transition()
-        .duration(750)
-        .call(zoom.transform, d3.zoomIdentity
-          .translate(translate[0], translate[1])
-          .scale(scale));
-    };
+//       svg.transition()
+//         .duration(750)
+//         .call(zoom.transform, d3.zoomIdentity
+//           .translate(translate[0], translate[1])
+//           .scale(scale));
+//     };
 
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-      simulation.stop();
-      svg.selectAll("*").remove();
-    };
-  }, [data]);
+//     return () => {
+//       window.removeEventListener("resize", updateDimensions);
+//       simulation.stop();
+//       svg.selectAll("*").remove();
+//     };
+//   }, [data]);
 
-  const convertNeo4jInt = (value) => {
-    return typeof value === "object" && value.low !== undefined ? value.low : value;
-  };
+//   const convertNeo4jInt = (value) => {
+//     return typeof value === "object" && value.low !== undefined ? value.low : value;
+//   };
 
-  return (
-    <div className="relative w-full h-screen overflow-hidden touch-none">
-      <svg ref={svgRef} className="w-full h-full"></svg>
+//   return (
+//     <div className="relative w-full h-screen overflow-hidden touch-none">
+//       <svg ref={svgRef} className="w-full h-full"></svg>
       
-      <div className="absolute top-4 right-4 flex flex-col gap-2">
-        <button 
-          onClick={() => window.zoomIn()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Zoom In"
-        >
-          <ZoomIn className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={() => window.zoomOut()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Zoom Out"
-        >
-          <ZoomOut className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={() => window.fitToScreen()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Fit to Screen"
-        >
-          <Maximize className="w-6 h-6" />
-        </button>
-      </div>
+//       <div className="absolute top-4 right-4 flex flex-col gap-2">
+//         <button 
+//           onClick={() => window.zoomIn()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Zoom In"
+//         >
+//           <ZoomIn className="w-6 h-6" />
+//         </button>
+//         <button 
+//           onClick={() => window.zoomOut()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Zoom Out"
+//         >
+//           <ZoomOut className="w-6 h-6" />
+//         </button>
+//         <button 
+//           onClick={() => window.fitToScreen()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Fit to Screen"
+//         >
+//           <Maximize className="w-6 h-6" />
+//         </button>
+//       </div>
 
-      {selectedNode && (
-        <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
-          <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
-          <div className="space-y-2">
-            {Object.entries(selectedNode).map(([key, value]) => {
-              if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
-                return (
-                  <div key={key} className="flex justify-between">
-                    <span className="text-gray-600">{key}:</span>
-                    <span className="font-medium">{convertNeo4jInt(value)}</span>
-                  </div>
-                );
-              }
-              return null;
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+//       {selectedNode && (
+//         <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
+//           <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
+//           <div className="space-y-2">
+//             {Object.entries(selectedNode).map(([key, value]) => {
+//               if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
+//                 return (
+//                   <div key={key} className="flex justify-between">
+//                     <span className="text-gray-600">{key}:</span>
+//                     <span className="font-medium">{convertNeo4jInt(value)}</span>
+//                   </div>
+//                 );
+//               }
+//               return null;
+//             })}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
-export default D3Graph;
+// export default D3Graph;
 
