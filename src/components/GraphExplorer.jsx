@@ -3,7 +3,6 @@ import NeoVis from 'neovis.js';
 
 const GraphExplorer = () => {
   useEffect(() => {
-    // NeoVis configuration
     const config = {
       containerId: "viz",
       neo4j: {
@@ -32,10 +31,9 @@ const GraphExplorer = () => {
       console_debug: true,
     };
 
-    const viz = new NeoVis(config); // Use NeoVis directly here without .default
+    const viz = new NeoVis(config); 
     viz.render();
 
-    // Optional: Cleanup on component unmount
     return () => {
       viz.clearNetwork();
     };

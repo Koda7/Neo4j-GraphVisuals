@@ -17,32 +17,29 @@ export const fetchGraphData = async () => {
 
     const nodes = [];
     const links = [];
-    const nodeMap = new Map(); // Use a Map to avoid duplicate nodes
+    const nodeMap = new Map(); 
 
     result.records.forEach(record => {
       const sourceNode = record.get('n');
       const targetNode = record.get('m');
       const relationship = record.get('r');
 
-      // Add source node if it doesn't already exist
       if (!nodeMap.has(sourceNode.identity.toString())) {
         nodeMap.set(sourceNode.identity.toString(), {
           id: sourceNode.identity.toString(),
-          label: sourceNode.labels[0], // assuming a single label
+          label: sourceNode.labels[0], 
           ...sourceNode.properties
         });
       }
 
-      // Add target node if it doesn't already exist
       if (!nodeMap.has(targetNode.identity.toString())) {
         nodeMap.set(targetNode.identity.toString(), {
           id: targetNode.identity.toString(),
-          label: targetNode.labels[0], // assuming a single label
+          label: targetNode.labels[0], 
           ...targetNode.properties
         });
       }
 
-      // Add link with source and target node IDs
       links.push({
         source: sourceNode.identity.toString(),
         target: targetNode.identity.toString(),
@@ -50,10 +47,8 @@ export const fetchGraphData = async () => {
       });
     });
 
-    // Convert nodeMap values to an array for D3 compatibility
     nodes.push(...nodeMap.values());
 
-    // Log nodes and links to verify
     console.log("Nodes:", nodes);
     console.log("Links:", links);
 

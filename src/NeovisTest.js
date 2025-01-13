@@ -133,254 +133,376 @@
 
 // export default NeovisGraph;
 
-// import React, { useEffect, useRef, useState } from 'react';
-// import * as d3 from 'd3';
-// import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-// const sampleData = {
-//   nodes: [
-//     { id: "1", label: "Customer", name: "Alice" },
-//     { id: "2", label: "Order", order_id: "1234" },
-//     { id: "3", label: "Product", product_name: "Widget" },
-//     { id: "4", label: "Customer", name: "Bob" },
-//     { id: "5", label: "Order", order_id: "5678" },
-//     { id: "6", label: "Product", product_name: "Gadget" },
-//     { id: "7", label: "Customer", name: "Carol" },
-//     { id: "8", label: "Order", order_id: "9101" },
-//     { id: "9", label: "Product", product_name: "Tool" },
-//     { id: "10", label: "Customer", name: "Dave" },
-//     { id: "11", label: "Order", order_id: "1121" },
-//     { id: "12", label: "Product", product_name: "Device" }
-//   ],
-//   links: [
-//     { source: "1", target: "2", type: "PLACED" },
-//     { source: "2", target: "3", type: "CONTAINS" },
-//     { source: "4", target: "5", type: "PLACED" },
-//     { source: "5", target: "6", type: "CONTAINS" },
-//     { source: "7", target: "8", type: "PLACED" },
-//     { source: "8", target: "9", type: "CONTAINS" },
-//     { source: "10", target: "11", type: "PLACED" },
-//     { source: "11", target: "12", type: "CONTAINS" }
-//   ]
-// };
+const sampleData = {
+  nodes: [
+    { id: "1", label: "Customer", name: "Alice" },
+    { id: "2", label: "Order", order_id: "1234" },
+    { id: "3", label: "Product", product_name: "Widget" },
+    { id: "4", label: "Customer", name: "Bob" },
+    { id: "5", label: "Order", order_id: "5678" },
+    { id: "6", label: "Product", product_name: "Gadget" },
+    { id: "7", label: "Customer", name: "Carol" },
+    { id: "8", label: "Order", order_id: "9101" },
+    { id: "9", label: "Product", product_name: "Tool" },
+    { id: "10", label: "Customer", name: "Dave" },
+    { id: "11", label: "Order", order_id: "1121" },
+    { id: "12", label: "Product", product_name: "Device" },
+    { id: "13", label: "Customer", name: "Eve" },
+    { id: "14", label: "Order", order_id: "3141" },
+    { id: "15", label: "Product", product_name: "Gizmo" },
+    { id: "16", label: "Customer", name: "Frank" },
+    { id: "17", label: "Order", order_id: "7182" },
+    { id: "18", label: "Product", product_name: "Contraption" },
+    { id: "19", label: "Customer", name: "Grace" },
+    { id: "20", label: "Order", order_id: "1923" },
+    { id: "21", label: "Product", product_name: "Apparatus" },
+    { id: "22", label: "Customer", name: "Hank" },
+    { id: "23", label: "Order", order_id: "4567" },
+    { id: "24", label: "Product", product_name: "Instrument" },
+    { id: "25", label: "Customer", name: "Ivy" },
+    { id: "26", label: "Order", order_id: "8901" },
+    { id: "27", label: "Product", product_name: "Implement" },
+    { id: "28", label: "Customer", name: "Jake" },
+    { id: "29", label: "Order", order_id: "1235" },
+    { id: "30", label: "Product", product_name: "Toolset" },
+  ],
+  links: [
+    { source: "1", target: "2", type: "PLACED" },
+    { source: "2", target: "3", type: "CONTAINS" },
+    { source: "4", target: "5", type: "PLACED" },
+    { source: "5", target: "6", type: "CONTAINS" },
+    { source: "7", target: "8", type: "PLACED" },
+    { source: "8", target: "9", type: "CONTAINS" },
+    { source: "10", target: "11", type: "PLACED" },
+    { source: "11", target: "12", type: "CONTAINS" },
+    { source: "13", target: "14", type: "PLACED" },
+    { source: "14", target: "15", type: "CONTAINS" },
+    { source: "16", target: "17", type: "PLACED" },
+    { source: "17", target: "18", type: "CONTAINS" },
+    { source: "19", target: "20", type: "PLACED" },
+    { source: "20", target: "21", type: "CONTAINS" },
+    { source: "22", target: "23", type: "PLACED" },
+    { source: "23", target: "24", type: "CONTAINS" },
+    { source: "25", target: "26", type: "PLACED" },
+    { source: "26", target: "27", type: "CONTAINS" },
+    { source: "28", target: "29", type: "PLACED" },
+    { source: "29", target: "30", type: "CONTAINS" },
+  ],
+};
 
-// const D3Graph = () => {
-//   const svgRef = useRef();
-//   const [selectedNode, setSelectedNode] = useState(null);
+const D3Graph = () => {
+  const svgRef = useRef();
+  const [selectedNode, setSelectedNode] = useState(null);
 
-//   const updateDimensions = () => {
-//     const width = window.innerWidth;
-//     const height = window.innerHeight;
-//     d3.select(svgRef.current).attr("width", width).attr("height", height);
-//   };
+  const [showOnlyCustomers, setShowOnlyCustomers] = useState(false);
 
-//   useEffect(() => {
-//     updateDimensions();
-//     window.addEventListener("resize", updateDimensions);
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    d3.select(svgRef.current).attr("width", width).attr("height", height);
+  };
 
-//     const width = window.innerWidth;
-//     const height = window.innerHeight;
+  useEffect(() => {
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
 
-//     // Create SVG and add zoom behavior
-//     const svg = d3.select(svgRef.current);
-//     const g = svg.append("g");
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const svg = d3.select(svgRef.current);
+    const g = svg.append("g");
     
-//     const zoom = d3.zoom()
-//       .scaleExtent([0.1, 4])
-//       .on("zoom", (event) => {
-//         g.attr("transform", event.transform);
-//       });
+    svg.node().addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+    svg.node().addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+    
+    const zoom = d3.zoom()
+      .scaleExtent([0.1, 4])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
 
-//     svg.call(zoom);
+    svg.call(zoom);
 
-//     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-//     const simulation = d3.forceSimulation(sampleData.nodes)
-//       .force("link", d3.forceLink(sampleData.links).id(d => d.id).distance(200))
-//       .force("charge", d3.forceManyBody().strength(-800))
-//       .force("center", d3.forceCenter(width / 2, height / 2));
+    const linkedByIndex = {};
+    sampleData.links.forEach(d => {
+      linkedByIndex[`${d.source},${d.target}`] = 1;
+      linkedByIndex[`${d.target},${d.source}`] = 1;
+    });
 
-//     const link = g.selectAll(".link")
-//       .data(sampleData.links)
-//       .enter()
-//       .append("line")
-//       .attr("class", "link")
-//       .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
-//       .attr("stroke-width", 2);
+    const isConnected = (a, b) => {
+      return (
+        linkedByIndex[`${a.id},${b.id}`] ||
+        linkedByIndex[`${b.id},${a.id}`] ||
+        a.id === b.id
+      );
+    };
 
-//     const linkLabels = g.selectAll(".link-label")
-//       .data(sampleData.links)
-//       .enter()
-//       .append("text")
-//       .attr("class", "link-label")
-//       .attr("text-anchor", "middle")
-//       .attr("font-size", 12)
-//       .attr("fill", "#555")
-//       .text(d => d.type);
+    const simulation = d3.forceSimulation(sampleData.nodes)
+      .force("link", d3.forceLink(sampleData.links)
+        .id(d => d.id)
+        .distance(150)) 
+      .force("charge", d3.forceManyBody()
+        .strength(d => -200))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(40));
 
-//     const node = g.selectAll(".node")
-//       .data(sampleData.nodes)
-//       .enter()
-//       .append("circle")
-//       .attr("class", "node")
-//       .attr("r", 30)
-//       .attr("fill", d => colorScale(d.label))
-//       .style("cursor", "grab")
-//       .on("click", (event, d) => {
-//         event.stopPropagation();
-//         setSelectedNode(d);
-//       })
-//       .call(d3.drag()
-//         .on("start", dragStarted)
-//         .on("drag", dragged)
-//         .on("end", dragEnded));
+    const link = g.selectAll(".link")
+      .data(sampleData.links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
+      .attr("stroke-width", 2);
 
-//     const labels = g.selectAll(".label")
-//       .data(sampleData.nodes)
-//       .enter()
-//       .append("text")
-//       .attr("class", "label")
-//       .attr("dy", ".35em")
-//       .attr("text-anchor", "middle")
-//       .attr("fill", "white")
-//       .attr("font-size", 14)
-//       .text(d => d.label === "Customer" ? d.name : d.label === "Order" ? d.order_id : d.product_name);
+    const linkLabels = g.selectAll(".link-label")
+      .data(sampleData.links)
+      .enter()
+      .append("text")
+      .attr("class", "link-label")
+      .attr("text-anchor", "middle")
+      .attr("font-size", 12)
+      .attr("fill", "#555")
+      .text(d => d.type);
 
-//     // Click on background to deselect node
-//     svg.on("click", () => {
-//       setSelectedNode(null);
-//     });
+    const node = g.selectAll(".node")
+      .data(sampleData.nodes)
+      .enter()
+      .append("circle")
+      .attr("class", "node")
+      .attr("r", 30)
+      .attr("fill", d => colorScale(d.label))
+      .style("cursor", "grab")
+      .on("click", (event, d) => {
+        event.stopPropagation();
+        setSelectedNode(d);
+      });
 
-//     simulation.on("tick", () => {
-//       link
-//         .attr("x1", d => d.source.x)
-//         .attr("y1", d => d.source.y)
-//         .attr("x2", d => d.target.x)
-//         .attr("y2", d => d.target.y);
+    const drag = d3.drag()
+      .on("start", dragStarted)
+      .on("drag", dragged)
+      .on("end", dragEnded);
 
-//       linkLabels
-//         .attr("x", d => (d.source.x + d.target.x) / 2)
-//         .attr("y", d => (d.source.y + d.target.y) / 2);
+    node.call(drag);
 
-//       node
-//         .attr("cx", d => (d.x = Math.max(30, Math.min(width - 30, d.x))))
-//         .attr("cy", d => (d.y = Math.max(30, Math.min(height - 30, d.y))));
+    const labels = g.selectAll(".label")
+      .data(sampleData.nodes)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .attr("fill", "white")
+      .attr("font-size", 14)
+      .attr("pointer-events", "none")
+      .text(d => 
+        d.label === "Customer"
+          ? d.name 
+          : d.label === "Order"
+          ? d.order_id
+          : d.product_name
+      );
 
-//       labels
-//         .attr("x", d => d.x)
-//         .attr("y", d => d.y);
-//     });
+    svg.on("click", () => {
+      setSelectedNode(null);
+    });
 
-//     function dragStarted(event, d) {
-//       event.sourceEvent.stopPropagation();
-//       if (!event.active) simulation.alphaTarget(0.3).restart();
-//       d.fx = d.x;
-//       d.fy = d.y;
-//       d3.select(event.sourceEvent.target).style("cursor", "grabbing");
-//     }
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
 
-//     function dragged(event, d) {
-//       d.fx = event.x;
-//       d.fy = event.y;
-//     }
+      linkLabels
+        .attr("x", d => (d.source.x + d.target.x) / 2)
+        .attr("y", d => (d.source.y + d.target.y) / 2);
 
-//     function dragEnded(event, d) {
-//       if (!event.active) simulation.alphaTarget(0);
-//       d.fx = null;
-//       d.fy = null;
-//       d3.select(event.sourceEvent.target).style("cursor", "grab");
-//     }
+      node
+        .attr("cx", d => (d.x = Math.max(30, Math.min(width - 30, d.x))))
+        .attr("cy", d => (d.y = Math.max(30, Math.min(height - 30, d.y))));
 
-//     // Zoom control functions
-//     window.zoomIn = () => {
-//       svg.transition().call(zoom.scaleBy, 1.5);
-//     };
+      labels
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    });
 
-//     window.zoomOut = () => {
-//       svg.transition().call(zoom.scaleBy, 0.67);
-//     };
+    function dragStarted(event, d) {
+      if (!event.active) {
+        simulation.alphaTarget(0.3).restart();
+      }
+      d.fx = d.x;
+      d.fy = d.y;
+      d3.select(this).style("cursor", "grabbing");
+    }
 
-//     window.fitToScreen = () => {
-//       const bounds = g.node().getBBox();
-//       const parent = svg.node().getBoundingClientRect();
-//       const fullWidth = parent.width;
-//       const fullHeight = parent.height;
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
       
-//       const width = bounds.width;
-//       const height = bounds.height;
+      sampleData.nodes.forEach(n => {
+        if (n !== d && isConnected(d, n)) {
+          const dx = event.x - d.x;
+          const dy = event.y - d.y;
+          n.x += dx * 0.1;
+          n.y += dy * 0.1;
+        }
+      });
+    }
+
+    function dragEnded(event, d) {
+      if (!event.active) {
+        simulation.alphaTarget(0);
+      }
+      d.fx = null;
+      d.fy = null;
+      d3.select(this).style("cursor", "grab");
+    }
+
+    window.zoomIn = () => {
+      svg.transition().call(zoom.scaleBy, 1.5);
+    };
+    window.zoomOut = () => {
+      svg.transition().call(zoom.scaleBy, 0.67);
+    };
+    window.fitToScreen = () => {
+      const bounds = g.node().getBBox();
+      const parent = svg.node().getBoundingClientRect();
+      const fullWidth = parent.width;
+      const fullHeight = parent.height;
       
-//       const midX = bounds.x + width / 2;
-//       const midY = bounds.y + height / 2;
+      const w = bounds.width;
+      const h = bounds.height;
       
-//       const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
-//       const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
-
-//       svg.transition()
-//         .duration(750)
-//         .call(zoom.transform, d3.zoomIdentity
-//           .translate(translate[0], translate[1])
-//           .scale(scale));
-//     };
-
-//     return () => {
-//       window.removeEventListener("resize", updateDimensions);
-//       svg.selectAll("*").remove();
-//     };
-//   }, []);
-
-//   return (
-//     <div className="relative w-full h-screen overflow-hidden">
-//       <svg ref={svgRef} className="w-full h-full"></svg>
+      const midX = bounds.x + w / 2;
+      const midY = bounds.y + h / 2;
       
-//       {/* Zoom Controls */}
-//       <div className="absolute top-4 right-4 flex flex-col gap-2">
-//         <button 
-//           onClick={() => window.zoomIn()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Zoom In"
-//         >
-//           <ZoomIn className="w-6 h-6" />
-//         </button>
-//         <button 
-//           onClick={() => window.zoomOut()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Zoom Out"
-//         >
-//           <ZoomOut className="w-6 h-6" />
-//         </button>
-//         <button 
-//           onClick={() => window.fitToScreen()}
-//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-//           title="Fit to Screen"
-//         >
-//           <Maximize className="w-6 h-6" />
-//         </button>
-//       </div>
+      const scale = 0.8 / Math.max(w / fullWidth, h / fullHeight);
+      const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
-//       {/* Properties Panel */}
-//       {selectedNode && (
-//         <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
-//           <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
-//           <div className="space-y-2">
-//             {Object.entries(selectedNode).map(([key, value]) => {
-//               if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
-//                 return (
-//                   <div key={key} className="flex justify-between">
-//                     <span className="text-gray-600">{key}:</span>
-//                     <span className="font-medium">{value}</span>
-//                   </div>
-//                 );
-//               }
-//               return null;
-//             })}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+      svg
+        .transition()
+        .duration(750)
+        .call(
+          zoom.transform,
+          d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+        );
+    };
 
-// export default D3Graph;
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      svg.selectAll("*").remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!svgRef.current) return;
+    
+    const svg = d3.select(svgRef.current);
+
+    svg.selectAll(".node")
+      .style("opacity", d =>
+        showOnlyCustomers && d.label !== "Customer" ? 0.2 : 1
+      );
+
+    svg.selectAll(".link")
+      .style("opacity", d => {
+        const source = typeof d.source === "object" ? d.source.label : null;
+        const target = typeof d.target === "object" ? d.target.label : null;
+        if (!showOnlyCustomers) return 1;
+        return (source === "Customer" && target === "Customer") ? 1 : 0.2;
+      });
+
+    svg.selectAll(".link-label")
+      .style("opacity", d => {
+        const source = typeof d.source === "object" ? d.source.label : null;
+        const target = typeof d.target === "object" ? d.target.label : null;
+        if (!showOnlyCustomers) return 1;
+        return (source === "Customer" && target === "Customer") ? 1 : 0.2;
+      });
+
+    svg.selectAll(".label")
+      .style("opacity", d =>
+        showOnlyCustomers && d.label !== "Customer" ? 0.2 : 1
+      );
+
+  }, [showOnlyCustomers]);
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden touch-none">
+      <div className="absolute top-4 left-4 z-10">
+        <button
+          onClick={() => setShowOnlyCustomers(!showOnlyCustomers)}
+          className="px-4 py-2 bg-white rounded shadow-lg hover:bg-gray-100"
+        >
+          {showOnlyCustomers ? "Show All" : "Show Only Customers"}
+        </button>
+      </div>
+
+      <svg ref={svgRef} className="w-full h-full"></svg>
+      
+      <div className="absolute top-4 right-4 flex flex-col gap-2">
+        <button 
+          onClick={() => window.zoomIn()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Zoom In"
+        >
+          <ZoomIn className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => window.zoomOut()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Zoom Out"
+        >
+          <ZoomOut className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => window.fitToScreen()}
+          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+          title="Fit to Screen"
+        >
+          <Maximize className="w-6 h-6" />
+        </button>
+      </div>
+
+      {selectedNode && (
+        <div className="absolute top-20 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
+          <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
+          <div className="space-y-2">
+            {Object.entries(selectedNode).map(([key, value]) => {
+              if (
+                key !== 'x' && 
+                key !== 'y' && 
+                key !== 'fx' && 
+                key !== 'fy' && 
+                key !== 'index' && 
+                key !== 'vx' && 
+                key !== 'vy'
+              ) {
+                return (
+                  <div key={key} className="flex justify-between">
+                    <span className="text-gray-600">{key}:</span>
+                    <span className="font-medium">{value}</span>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default D3Graph;
+
+
 
 // import React, { useEffect, useRef, useState } from 'react';
 // import * as d3 from 'd3';
@@ -399,7 +521,25 @@
 //     { id: "9", label: "Product", product_name: "Tool" },
 //     { id: "10", label: "Customer", name: "Dave" },
 //     { id: "11", label: "Order", order_id: "1121" },
-//     { id: "12", label: "Product", product_name: "Device" }
+//     { id: "12", label: "Product", product_name: "Device" },
+//     { id: "13", label: "Customer", name: "Eve" },
+//     { id: "14", label: "Order", order_id: "3141" },
+//     { id: "15", label: "Product", product_name: "Gizmo" },
+//     { id: "16", label: "Customer", name: "Frank" },
+//     { id: "17", label: "Order", order_id: "7182" },
+//     { id: "18", label: "Product", product_name: "Contraption" },
+//     { id: "19", label: "Customer", name: "Grace" },
+//     { id: "20", label: "Order", order_id: "1923" },
+//     { id: "21", label: "Product", product_name: "Apparatus" },
+//     { id: "22", label: "Customer", name: "Hank" },
+//     { id: "23", label: "Order", order_id: "4567" },
+//     { id: "24", label: "Product", product_name: "Instrument" },
+//     { id: "25", label: "Customer", name: "Ivy" },
+//     { id: "26", label: "Order", order_id: "8901" },
+//     { id: "27", label: "Product", product_name: "Implement" },
+//     { id: "28", label: "Customer", name: "Jake" },
+//     { id: "29", label: "Order", order_id: "1235" },
+//     { id: "30", label: "Product", product_name: "Toolset" },
 //   ],
 //   links: [
 //     { source: "1", target: "2", type: "PLACED" },
@@ -409,9 +549,23 @@
 //     { source: "7", target: "8", type: "PLACED" },
 //     { source: "8", target: "9", type: "CONTAINS" },
 //     { source: "10", target: "11", type: "PLACED" },
-//     { source: "11", target: "12", type: "CONTAINS" }
-//   ]
+//     { source: "11", target: "12", type: "CONTAINS" },
+//     { source: "13", target: "14", type: "PLACED" },
+//     { source: "14", target: "15", type: "CONTAINS" },
+//     { source: "16", target: "17", type: "PLACED" },
+//     { source: "17", target: "18", type: "CONTAINS" },
+//     { source: "19", target: "20", type: "PLACED" },
+//     { source: "20", target: "21", type: "CONTAINS" },
+//     { source: "22", target: "23", type: "PLACED" },
+//     { source: "23", target: "24", type: "CONTAINS" },
+//     { source: "25", target: "26", type: "PLACED" },
+//     { source: "26", target: "27", type: "CONTAINS" },
+//     { source: "28", target: "29", type: "PLACED" },
+//     { source: "29", target: "30", type: "CONTAINS" },
+//   ],
 // };
+
+
 
 // const D3Graph = () => {
 //   const svgRef = useRef();
@@ -670,259 +824,260 @@
 
 // export default D3Graph;
 
-import React, { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
-import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-const sampleData = {
-  nodes: [
-    { id: "1", label: "Customer", name: "Alice" },
-    { id: "2", label: "Order", order_id: "1234" },
-    { id: "3", label: "Product", product_name: "Widget" },
-    { id: "4", label: "Customer", name: "Bob" },
-    { id: "5", label: "Order", order_id: "5678" },
-    { id: "6", label: "Product", product_name: "Gadget" },
-    { id: "7", label: "Customer", name: "Carol" },
-    { id: "8", label: "Order", order_id: "9101" },
-    { id: "9", label: "Product", product_name: "Tool" },
-    { id: "10", label: "Customer", name: "Dave" },
-    { id: "11", label: "Order", order_id: "1121" },
-    { id: "12", label: "Product", product_name: "Device" }
-  ],
-  links: [
-    { source: "1", target: "2", type: "PLACED" },
-    { source: "2", target: "3", type: "CONTAINS" },
-    { source: "4", target: "5", type: "PLACED" },
-    { source: "5", target: "6", type: "CONTAINS" },
-    { source: "7", target: "8", type: "PLACED" },
-    { source: "8", target: "9", type: "CONTAINS" },
-    { source: "10", target: "11", type: "PLACED" },
-    { source: "11", target: "12", type: "CONTAINS" }
-  ]
-};
 
-const D3Graph = () => {
-  const svgRef = useRef();
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [showOnlyCustomers, setShowOnlyCustomers] = useState(false);
+// import React, { useEffect, useRef, useState } from 'react';
+// import * as d3 from 'd3';
+// import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-  const updateDimensions = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    d3.select(svgRef.current).attr("width", width).attr("height", height);
-  };
+// const sampleData = {
+//   nodes: [
+//     { id: "1", label: "Customer", name: "Alice" },
+//     { id: "2", label: "Order", order_id: "1234" },
+//     { id: "3", label: "Product", product_name: "Widget" },
+//     { id: "4", label: "Customer", name: "Bob" },
+//     { id: "5", label: "Order", order_id: "5678" },
+//     { id: "6", label: "Product", product_name: "Gadget" },
+//     { id: "7", label: "Customer", name: "Carol" },
+//     { id: "8", label: "Order", order_id: "9101" },
+//     { id: "9", label: "Product", product_name: "Tool" },
+//     { id: "10", label: "Customer", name: "Dave" },
+//     { id: "11", label: "Order", order_id: "1121" },
+//     { id: "12", label: "Product", product_name: "Device" }
+//   ],
+//   links: [
+//     { source: "1", target: "2", type: "PLACED" },
+//     { source: "2", target: "3", type: "CONTAINS" },
+//     { source: "4", target: "5", type: "PLACED" },
+//     { source: "5", target: "6", type: "CONTAINS" },
+//     { source: "7", target: "8", type: "PLACED" },
+//     { source: "8", target: "9", type: "CONTAINS" },
+//     { source: "10", target: "11", type: "PLACED" },
+//     { source: "11", target: "12", type: "CONTAINS" }
+//   ]
+// };
 
-  useEffect(() => {
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+// const D3Graph = () => {
+//   const svgRef = useRef();
+//   const [selectedNode, setSelectedNode] = useState(null);
+//   const [showOnlyCustomers, setShowOnlyCustomers] = useState(false);
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const padding = 50;
+//   const updateDimensions = () => {
+//     const width = window.innerWidth;
+//     const height = window.innerHeight;
+//     d3.select(svgRef.current).attr("width", width).attr("height", height);
+//   };
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
-    const g = svg.append("g");
+//   useEffect(() => {
+//     updateDimensions();
+//     window.addEventListener("resize", updateDimensions);
 
-    const zoom = d3.zoom()
-      .scaleExtent([0.1, 4])
-      .on("zoom", (event) => {
-        g.attr("transform", event.transform);
-      });
-    svg.call(zoom);
+//     const width = window.innerWidth;
+//     const height = window.innerHeight;
+//     const padding = 50;
 
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+//     const svg = d3.select(svgRef.current);
+//     svg.selectAll("*").remove();
+//     const g = svg.append("g");
 
-    const filteredNodes = showOnlyCustomers
-      ? sampleData.nodes.filter(node => node.label === "Customer")
-      : sampleData.nodes;
+//     const zoom = d3.zoom()
+//       .scaleExtent([0.1, 4])
+//       .on("zoom", (event) => {
+//         g.attr("transform", event.transform);
+//       });
+//     svg.call(zoom);
 
-    const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
-    const filteredLinks = showOnlyCustomers
-      ? sampleData.links.filter(link =>
-          filteredNodeIds.has(link.source) && filteredNodeIds.has(link.target)
-        )
-      : sampleData.links;
+//     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const simulation = d3.forceSimulation(filteredNodes)
-      .force("link", d3.forceLink(filteredLinks)
-        .id(d => d.id)
-        .distance(150))
-      .force("charge", d3.forceManyBody().strength(-200))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(40));
+//     const filteredNodes = showOnlyCustomers
+//       ? sampleData.nodes.filter(node => node.label === "Customer")
+//       : sampleData.nodes;
 
-    const link = g.selectAll(".link")
-      .data(filteredLinks)
-      .enter()
-      .append("line")
-      .attr("class", "link")
-      .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
-      .attr("stroke-width", 2);
+//     const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
+//     const filteredLinks = showOnlyCustomers
+//       ? sampleData.links.filter(link =>
+//           filteredNodeIds.has(link.source) && filteredNodeIds.has(link.target)
+//         )
+//       : sampleData.links;
 
-    const node = g.selectAll(".node")
-      .data(filteredNodes)
-      .enter()
-      .append("circle")
-      .attr("class", "node")
-      .attr("r", 30)
-      .attr("fill", d => colorScale(d.label))
-      .style("cursor", "grab")
-      .on("click", (event, d) => {
-        event.stopPropagation();
-        setSelectedNode(d);
-      });
+//     const simulation = d3.forceSimulation(filteredNodes)
+//       .force("link", d3.forceLink(filteredLinks)
+//         .id(d => d.id)
+//         .distance(150))
+//       .force("charge", d3.forceManyBody().strength(-200))
+//       .force("center", d3.forceCenter(width / 2, height / 2))
+//       .force("collision", d3.forceCollide().radius(40));
 
-    const labels = g.selectAll(".label")
-      .data(filteredNodes)
-      .enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "middle")
-      .attr("fill", "white")
-      .attr("font-size", 14)
-      .attr("pointer-events", "none")
-      .text(d => d.label === "Customer" ? d.name : d.label === "Order" ? d.order_id : d.product_name);
+//     const link = g.selectAll(".link")
+//       .data(filteredLinks)
+//       .enter()
+//       .append("line")
+//       .attr("class", "link")
+//       .attr("stroke", d => d.type === "PLACED" ? "#4B0082" : "#DC143C")
+//       .attr("stroke-width", 2);
 
-    const drag = d3.drag()
-      .on("start", (event, d) => {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      })
-      .on("drag", (event, d) => {
-        d.fx = Math.max(padding, Math.min(width - padding, event.x));
-        d.fy = Math.max(padding, Math.min(height - padding, event.y));
-      })
-      .on("end", (event, d) => {
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-      });
+//     const node = g.selectAll(".node")
+//       .data(filteredNodes)
+//       .enter()
+//       .append("circle")
+//       .attr("class", "node")
+//       .attr("r", 30)
+//       .attr("fill", d => colorScale(d.label))
+//       .style("cursor", "grab")
+//       .on("click", (event, d) => {
+//         event.stopPropagation();
+//         setSelectedNode(d);
+//       });
 
-    node.call(drag);
+//     const labels = g.selectAll(".label")
+//       .data(filteredNodes)
+//       .enter()
+//       .append("text")
+//       .attr("class", "label")
+//       .attr("dy", ".35em")
+//       .attr("text-anchor", "middle")
+//       .attr("fill", "white")
+//       .attr("font-size", 14)
+//       .attr("pointer-events", "none")
+//       .text(d => d.label === "Customer" ? d.name : d.label === "Order" ? d.order_id : d.product_name);
 
-    svg.on("click", () => {
-      setSelectedNode(null);
-    });
+//     const drag = d3.drag()
+//       .on("start", (event, d) => {
+//         if (!event.active) simulation.alphaTarget(0.3).restart();
+//         d.fx = d.x;
+//         d.fy = d.y;
+//       })
+//       .on("drag", (event, d) => {
+//         d.fx = Math.max(padding, Math.min(width - padding, event.x));
+//         d.fy = Math.max(padding, Math.min(height - padding, event.y));
+//       })
+//       .on("end", (event, d) => {
+//         if (!event.active) simulation.alphaTarget(0);
+//         d.fx = null;
+//         d.fy = null;
+//       });
 
-    simulation.on("tick", () => {
-      link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+//     node.call(drag);
 
-      node
-        .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
-        .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
+//     svg.on("click", () => {
+//       setSelectedNode(null);
+//     });
 
-      labels
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
-    });
+//     simulation.on("tick", () => {
+//       link
+//         .attr("x1", d => d.source.x)
+//         .attr("y1", d => d.source.y)
+//         .attr("x2", d => d.target.x)
+//         .attr("y2", d => d.target.y);
 
-    // Zoom control functions
-    window.zoomIn = () => {
-      svg.transition().call(zoom.scaleBy, 1.5);
-    };
+//       node
+//         .attr("cx", d => d.x = Math.max(padding, Math.min(width - padding, d.x)))
+//         .attr("cy", d => d.y = Math.max(padding, Math.min(height - padding, d.y)));
 
-    window.zoomOut = () => {
-      svg.transition().call(zoom.scaleBy, 0.67);
-    };
+//       labels
+//         .attr("x", d => d.x)
+//         .attr("y", d => d.y);
+//     });
 
-    window.fitToScreen = () => {
-      const bounds = g.node().getBBox();
-      const parent = svg.node().getBoundingClientRect();
-      const fullWidth = parent.width;
-      const fullHeight = parent.height;
+//     window.zoomIn = () => {
+//       svg.transition().call(zoom.scaleBy, 1.5);
+//     };
+
+//     window.zoomOut = () => {
+//       svg.transition().call(zoom.scaleBy, 0.67);
+//     };
+
+//     window.fitToScreen = () => {
+//       const bounds = g.node().getBBox();
+//       const parent = svg.node().getBoundingClientRect();
+//       const fullWidth = parent.width;
+//       const fullHeight = parent.height;
       
-      const width = bounds.width;
-      const height = bounds.height;
+//       const width = bounds.width;
+//       const height = bounds.height;
       
-      const midX = bounds.x + width / 2;
-      const midY = bounds.y + height / 2;
+//       const midX = bounds.x + width / 2;
+//       const midY = bounds.y + height / 2;
       
-      const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
-      const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+//       const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+//       const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
-      svg.transition()
-        .duration(750)
-        .call(zoom.transform, d3.zoomIdentity
-          .translate(translate[0], translate[1])
-          .scale(scale));
-    };
+//       svg.transition()
+//         .duration(750)
+//         .call(zoom.transform, d3.zoomIdentity
+//           .translate(translate[0], translate[1])
+//           .scale(scale));
+//     };
 
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-      simulation.stop();
-      svg.selectAll("*").remove();
-    };
-  }, [showOnlyCustomers]);
+//     return () => {
+//       window.removeEventListener("resize", updateDimensions);
+//       simulation.stop();
+//       svg.selectAll("*").remove();
+//     };
+//   }, [showOnlyCustomers]);
 
-  return (
-    <div className="relative w-full h-screen overflow-hidden touch-none">
-      <div className="absolute top-4 left-4 z-10">
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={showOnlyCustomers}
-            onChange={() => setShowOnlyCustomers(!showOnlyCustomers)}
-          />
-          <span>Show Only Customers</span>
-        </label>
-      </div>
+//   return (
+//     <div className="relative w-full h-screen overflow-hidden touch-none">
+//       <div className="absolute top-4 left-4 z-10">
+//         <label className="flex items-center space-x-2">
+//           <input
+//             type="checkbox"
+//             checked={showOnlyCustomers}
+//             onChange={() => setShowOnlyCustomers(!showOnlyCustomers)}
+//           />
+//           <span>Show Only Customers</span>
+//         </label>
+//       </div>
 
-      <svg ref={svgRef} className="w-full h-full"></svg>
+//       <svg ref={svgRef} className="w-full h-full"></svg>
       
-      <div className="absolute top-4 right-4 flex flex-col gap-2">
-        <button 
-          onClick={() => window.zoomIn()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Zoom In"
-        >
-          <ZoomIn className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={() => window.zoomOut()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Zoom Out"
-        >
-          <ZoomOut className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={() => window.fitToScreen()}
-          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          title="Fit to Screen"
-        >
-          <Maximize className="w-6 h-6" />
-        </button>
-      </div>
+//       <div className="absolute top-4 right-4 flex flex-col gap-2">
+//         <button 
+//           onClick={() => window.zoomIn()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Zoom In"
+//         >
+//           <ZoomIn className="w-6 h-6" />
+//         </button>
+//         <button 
+//           onClick={() => window.zoomOut()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Zoom Out"
+//         >
+//           <ZoomOut className="w-6 h-6" />
+//         </button>
+//         <button 
+//           onClick={() => window.fitToScreen()}
+//           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+//           title="Fit to Screen"
+//         >
+//           <Maximize className="w-6 h-6" />
+//         </button>
+//       </div>
 
-      {selectedNode && (
-        <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
-          <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
-          <div className="space-y-2">
-            {Object.entries(selectedNode).map(([key, value]) => {
-              if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
-                return (
-                  <div key={key} className="flex justify-between">
-                    <span className="text-gray-600">{key}:</span>
-                    <span className="font-medium">{value}</span>
-                  </div>
-                );
-              }
-              return null;
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+//       {selectedNode && (
+//         <div className="absolute top-4 left-4 w-64 bg-white p-4 rounded-lg shadow-lg">
+//           <h3 className="text-lg font-bold mb-2">{selectedNode.label} Properties</h3>
+//           <div className="space-y-2">
+//             {Object.entries(selectedNode).map(([key, value]) => {
+//               if (key !== 'x' && key !== 'y' && key !== 'fx' && key !== 'fy' && key !== 'index' && key !== 'vx' && key !== 'vy') {
+//                 return (
+//                   <div key={key} className="flex justify-between">
+//                     <span className="text-gray-600">{key}:</span>
+//                     <span className="font-medium">{value}</span>
+//                   </div>
+//                 );
+//               }
+//               return null;
+//             })}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
-export default D3Graph;
+// export default D3Graph;
 
 // import React, { useEffect, useRef, useState } from 'react';
 // import * as d3 from 'd3';
@@ -1335,4 +1490,6 @@ export default D3Graph;
 // };
 
 // export default D3Graph;
+
+// SampleData.js
 
